@@ -12,7 +12,7 @@
 			var text	= getAttr(data, 'text');
 			var data	= window.encodeURIComponent(data);
 
-			return '<a class="mcelb button size-small mceItem ' + cls + '" ' + 'data-sh-attr="' + data + '" data-mce-resize="false" data-mce-placeholder="0" style="display: inline-block; cursor: pointer;">' + text + '</a>';
+			return '<a class="mcelb button mceItem ' + cls + '" ' + 'data-sh-attr="' + data + '" data-mce-resize="false" data-mce-placeholder="0" style="display: inline-block; cursor: pointer;">' + text + '</a>';
 		}
 
 		function replaceShortcodes(content) {

@@ -95,7 +95,7 @@ function mcelb_get_path( $path = '' ) {
 function mcelb_get_url( $path = '' ) {
 
 	// define mcelb_URL to optimize performance
-	mcelb()->define( 'mcelb_URL', mcelb_get_setting( 'url' ) );
+	mcelb()->define( 'MCELB_URL', mcelb_get_setting( 'url' ) );
 
 	// return
 	return MCELB_URL . $path;

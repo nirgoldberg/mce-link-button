@@ -96,7 +96,7 @@ class MCELB {
 
 		// actions
 		add_action( 'init', array( $this, 'init' ), 99 );
-		add_action( 'init',	array( $this, 'enqueue_scripts' ), 99 );
+		add_action( 'init',	array( $this, 'register_assets' ), 99 );
 
 		// shortcode
 		add_shortcode( $this->shortcode_tag, array( $this, 'shortcode_handler' ) );
@@ -105,7 +105,10 @@ class MCELB {
 		if ( is_admin() ) {
 
 			// actions
-			add_action( 'admin_head',		array( $this, 'admin_head' ) );
+			add_action( 'admin_head', array( $this, 'admin_head' ) );
+
+			// filters
+			add_filter( 'mce_css', array( $this, 'editor_style' ) );
 
 		}
 
@@ -191,16 +194,31 @@ class MCELB {
 	}
 
 	/**
-	 * enqueue_scripts
+	 * register_assets
 	 *
-	 * This function will enqueue custom styles
+	 * This function will register scripts and styles
 	 *
+	 * @since		1.0.0
 	 * @param		N/A
 	 * @return		N/A
 	 */
-	function enqueue_scripts() {
+	public function register_assets() {
 
-		wp_enqueue_style( 'mce-link-button', plugins_url( 'assets/css/mce-link-button.css' , __FILE__ ) );
+		// append styles
+		$styles = array(
+			'mce-link-button'		=> array(
+				'src'	=> mcelb_get_url( 'assets/css/mce-link-button.css' ),
+				'deps'	=> false,
+			),
+		);
+
+		// register styles
+		foreach( $styles as $handle => $style ) {
+			wp_register_style( $handle, $style[ 'src' ], $style[ 'deps' ], MCELB_VERSION );
+		}
+
+		// enqueue styles
+		wp_enqueue_style( 'mce-link-button' );
 
 	}
 
@@ -236,7 +254,7 @@ class MCELB {
 		$target			= in_array( $target, $target_list ) ? $target : 'self';
 
 		// button markup
-		$output .= '<p><a class="mcelb button size-small" href="' . $link . '" target="_' . $target . '">' . $text . '</a></p>';
+		$output .= '<p><a class="mcelb button" href="' . $link . '" target="_' . $target . '">' . $text . '</a></p>';
 
 		// return
 		return $output;
@@ -300,6 +318,23 @@ class MCELB {
 
 		// return
 		return $buttons;
+
+	}
+
+	/**
+	 * editor_style
+	 *
+	 * This function will add tinyMCE styles
+	 *
+	 * @param	N/A
+	 * @return	N/A
+	 */
+	function editor_style( $styles ) {
+
+		$styles .= ', ' . mcelb_get_url( 'assets/css/mce-link-button.css' );
+
+		// return
+		return $styles;
 
 	}
 
