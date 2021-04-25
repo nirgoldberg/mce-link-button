@@ -234,12 +234,22 @@ class MCELB {
 	 */
 	function shortcode_handler( $atts, $content = null ) {
 
+		// custom style
+		if ( function_exists( 'get_field' ) ) {
+			$fontcolor		= get_field( 'acf-option_mce_link_btn_font_color', 'option' );
+			$bgcolor		= get_field( 'acf-option_mce_link_btn_background_color', 'option' );
+			$hoverbgcolor	= get_field( 'acf-option_mce_link_btn_hover_background_color', 'option' );
+		}
+
 		// attributes
 		extract( shortcode_atts(
 			array(
-				'text'		=> 'Download',
-				'link'		=> 'https://',
-				'target'	=> 'self',
+				'text'			=> 'Download',
+				'link'			=> 'https://',
+				'target'		=> 'self',
+				'custom_style'	=> 'no',
+				'font_color'	=> $fontcolor ? $fontcolor : '#2D2D2D',
+				'bg_color'		=> $bgcolor ? $bgcolor : '#EEEBE9',
 			), $atts)
 		);
 
@@ -249,12 +259,19 @@ class MCELB {
 		if ( ! $text )
 			return $output;
 
+		$output =
+			'<style>' .
+				'.mcelb.button { color: ' . $fontcolor . '; background-color: ' . $bgcolor . '; }' .
+				'.mcelb.button:hover { color: ' . $fontcolor . '; background-color: ' . $hoverbgcolor . '; }' .
+			'</style>';
+
 		// validate link target, if not valid revert to default
 		$target_list	= array( 'self', 'blank' );
 		$target			= in_array( $target, $target_list ) ? $target : 'self';
+		$style			= 'yes' == $custom_style ? ( ( $fontcolor != $font_color ? 'color: ' . $font_color . '; ' : '' ) . ( $bgcolor != $bg_color ? 'background-color: ' . $bg_color . '; ' : '' ) ) : '';
 
 		// button markup
-		$output .= '<p><a class="mcelb button" href="' . $link . '" target="_' . $target . '">' . $text . '</a></p>';
+		$output .= '<p><a class="mcelb button" style="' . $style . '" href="' . $link . '" target="_' . $target . '">' . $text . '</a></p>';
 
 		// return
 		return $output;

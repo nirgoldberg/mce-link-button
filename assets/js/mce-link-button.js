@@ -44,6 +44,15 @@
 			var target = 'self';
 			if (v.target)
 				target = v.target;
+			var customStyle = false;
+			if (v.customStyle)
+				customStyle = v.customStyle;
+			var fontColor = '#2D2D2D';
+			if (v.fontColor)
+				fontColor = v.fontColor;
+			var bgColor = '#EEEBE9';
+			if (v.bgColor)
+				bgColor = v.bgColor;
 
 			// updated element will be removed first
 			elem = '';
@@ -77,6 +86,31 @@
 							{text: 'New Page',	value: 'blank'}
 						],
 						tooltip: 'Select link target'
+					},
+					{
+						type		: 'listbox',
+						name		: 'customStyle',
+						label		: 'Custom Style',
+						value		: customStyle,
+						'values'	: [
+							{text: 'No',	value: 'no'},
+							{text: 'Yes',	value: 'yes'}
+						],
+						tooltip: ''
+					},
+					{
+						type		: 'colorpicker',
+						name		: 'fontColor',
+						label		: 'Font Color',
+						value		: fontColor,
+						tooltip		: ''
+					},
+					{
+						type		: 'colorpicker',
+						name		: 'bgColor',
+						label		: 'Background Color',
+						value		: bgColor,
+						tooltip		: ''
 					}
 				],
 				onsubmit: function(e) {
@@ -94,6 +128,15 @@
 					// check for target
 					if (typeof e.data.target != 'undefined' && e.data.target.length)
 						shortcode_str += ' target="' + e.data.target + '"';
+					// check for customStyle
+					if (typeof e.data.customStyle != 'undefined' && e.data.customStyle.length)
+						shortcode_str += ' custom_style="' + e.data.customStyle + '"';
+					// check for fontColor
+					if (typeof e.data.fontColor != 'undefined' && e.data.fontColor.length)
+						shortcode_str += ' font_color="' + e.data.fontColor + '"';
+					// check for bgColor
+					if (typeof e.data.bgColor != 'undefined' && e.data.bgColor.length)
+						shortcode_str += ' bg_color="' + e.data.bgColor + '"';
 
 					// close shortcode
 					shortcode_str += ']';
@@ -109,9 +152,12 @@
 			tooltip	: 'MCE Link Button',
 			onclick	: function() {
 				editor.execCommand('mce-link-button-popup', '', {
-					text	: 'Download',
-					link	: 'https://',
-					target	: 'self'
+					text			: 'Download',
+					link			: 'https://',
+					target			: 'self',
+					custom_style	: 'no',
+					font_color		: '#2D2D2D',
+					bg_color		: '#EEEBE9'
 				});
 			}
 		});
@@ -134,10 +180,13 @@
 				title = window.decodeURIComponent(title);
 
 				editor.execCommand('mce-link-button-popup', '', {
-					text	: getAttr(title, 'text'),
-					link	: getAttr(title, 'link'),
-					target	: getAttr(title, 'target'),
-					elem	: e.target
+					text		: getAttr(title, 'text'),
+					link		: getAttr(title, 'link'),
+					target		: getAttr(title, 'target'),
+					customStyle	: getAttr(title, 'custom_style'),
+					fontColor	: getAttr(title, 'font_color'),
+					bgColor		: getAttr(title, 'bg_color'),
+					elem		: e.target
 				});
 			}
 		});
